@@ -20,7 +20,7 @@ class Data_Prepare(object):
     # Get stopwords
     def get_stopwords(self):
         stopwords = []
-        with open("/data/Stopwords.txt", "r",
+        with open("data/Stopwords.txt", "r",
                   encoding='utf8') as f:
             lines = f.readlines()
             for line in lines:

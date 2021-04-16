@@ -2,17 +2,17 @@ import linecache
 import random
 
 # Copy queried address records
-def copy_query():
-    with open(r'/data/preprocess_data/Shenzhen_address_data-20180522-matched-01.txt', 'r', encoding='utf-8') as f1:
-        with open(r'/data/preprocess_data/Shenzhen_address_data-20180522-unmatched-01.txt', 'w', encoding='utf-8')as f2:
-            while True:
-                line = f1.readline()
-                f2.write(line)
+# def copy_query():
+#     with open(r'/data/preprocess_data/Shenzhen_address_data-20180522-matched-01.txt', 'r', encoding='utf-8') as f1:
+#         with open(r'/data/preprocess_data/Shenzhen_address_data-20180522-unmatched-01.txt', 'w', encoding='utf-8')as f2:
+#             while True:
+#                 line = f1.readline()
+#                 f2.write(line)
 
 # Randomly setect unmatched address records
 def create_unmatched():
-    input_file = '/data/preprocess_data/Shenzhen_address_data-20180522-matched-02.txt'
-    output_file = '/data/preprocess_data/Shenzhen_address_data-20180522-unmatched-02.txt'
+    input_file = 'data/preprocess_data/Shenzhen_address_data-20180522-matched-02.txt'
+    output_file = 'data/preprocess_data/Shenzhen_address_data-20180522-unmatched-02.txt'
 
     with open(input_file, 'r+', encoding='utf-8') as filehandler:
         linecount = len(filehandler.readlines())
@@ -32,9 +32,9 @@ def create_unmatched():
 
 # Append lines
 def append_lines():
-    file_1 = '/data/preprocess_data/Shenzhen_address_data-20180522-unmatched-01.txt'
-    file_2 = '/data/preprocess_data/Shenzhen_address_data-20180522-unmatched-02.txt'
-    output_file = '/data/preprocess_data/Shenzhen_address_data-20180522-unmatched.txt'
+    file_1 = 'data/preprocess_data/Shenzhen_address_data-20180522-unmatched-01.txt'
+    file_2 = 'data/preprocess_data/Shenzhen_address_data-20180522-unmatched-02.txt'
+    output_file = 'data/preprocess_data/Shenzhen_address_data-20180522-unmatched.txt'
 
     with open(file_1, 'r+', encoding='utf-8') as filehandler:
         linecount = len(filehandler.readlines())
@@ -61,10 +61,10 @@ def split_dataset(num):
     print("dev",len(dev),dev)
     print("test",len(test),test)
 
-    input_file = '/data/preprocess_data/Address84474.txt'
-    output_1 = '/data/dataset/train.txt'
-    output_2 = '/data/dataset/dev.txt'
-    output_3 = '/data/dataset/test.txt'
+    input_file = 'data/preprocess_data/Address84474.txt'
+    output_1 = 'data/dataset/train.txt'
+    output_2 = 'data/dataset/dev.txt'
+    output_3 = 'data/dataset/test.txt'
     with open(input_file, 'r+', encoding='utf-8') as f:
         line = f.readline()
         with open(output_1, 'w', encoding='utf-8') as o1:
@@ -86,4 +86,5 @@ def split_dataset(num):
     f.close()
 
 
-split_dataset(84474)
+if __name__ == '__main__':
+    split_dataset(84474)

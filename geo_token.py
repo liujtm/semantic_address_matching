@@ -3,13 +3,13 @@ import os
 import logging
 
 # Load custom dictionaries
-jieba.load_userdict('/data/GeoDicv2.txt')
+jieba.load_userdict('data/GeoDicv2.txt')
 
 
 # Load stopwords
 def get_stopwords():
     stopwords = []
-    with open("/data/Stopwords.txt", "r", encoding='utf8') as f:
+    with open("data/Stopwords.txt", "r", encoding='utf8') as f:
         lines = f.readlines()
         for line in lines:
             stopwords.append(line.strip())
@@ -23,12 +23,12 @@ stopwords = get_stopwords()
 def segment():
     file_nums = 0
     count = 0
-    url_1 = '/data/corpus/'
-    url_2 = '/data/token/'
+    url_1 = 'data/corpus/'
+    url_2 = 'data/token/'
     filenames = os.listdir(url_1)
     for file in filenames:
-        logging.info('Starting ' + str(file_nums) + 'file word Segmentation!')
-        segment_file = open(url_2 + file + '_segment', 'a', encoding='utf8')
+        logging.info('Starting ' + str(file_nums) + ' file word Segmentation!')
+        segment_file = open(url_2 + file + '_segment', 'w', encoding='utf8')
         with open(url_1 + file, encoding='utf8') as f:
             text = f.readlines()
             for sentence in text:
@@ -41,8 +41,11 @@ def segment():
             del text
             f.close()
         segment_file.close()
-        logging.info('Finished ' + str(file_nums) + 'file word Segmentation!')
+        logging.info('Finished ' + str(file_nums) + ' file word Segmentation!')
         file_nums += 1
 
 
-segment()
+if __name__ == '__main__':
+    logging.basicConfig(format='%(asctime)s: %(levelname)s: %(message)s')
+    logging.root.setLevel(level=logging.INFO)
+    segment()

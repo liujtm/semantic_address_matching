@@ -13,7 +13,8 @@ con = config.Config()
 
 class Infer(object):
     def __init__(self):
-        self.checkpoint_file = tf.train.latest_checkpoint('D:/Lydia/PycharmProjects/Deep learning for geocoding/model/esim')
+        # self.checkpoint_file = tf.train.latest_checkpoint('D:/Lydia/PycharmProjects/Deep learning for geocoding/model/esim')
+        self.checkpoint_file = tf.train.latest_checkpoint('data/model/esim')
         graph = tf.Graph()
         with graph.as_default():
             session_conf = tf.ConfigProto(allow_soft_placement=True, log_device_placement=False)
@@ -67,15 +68,15 @@ class Infer(object):
 
     def infer(self):
         # transfer to vector
-        test_texta_index = data_pre.readfile('/data/dataset/test_code_a.txt')
+        test_texta_index = data_pre.readfile('data/dataset/test_code_a.txt')
         test_texta_index = pad_sequences(test_texta_index, con.maxLen, padding='post')
         print(test_texta_index[0])
         print(len(test_texta_index))
-        test_textb_index = data_pre.readfile('/data/dataset/test_code_b.txt')
+        test_textb_index = data_pre.readfile('data/dataset/test_code_b.txt')
         test_textb_index = pad_sequences(test_textb_index, con.maxLen, padding='post')
         print(test_textb_index[0])
         print(len(test_textb_index))
-        test_tag = data_pre.readfile('/data/dataset/test_lable.txt')
+        test_tag = data_pre.readfile('data/dataset/test_lable.txt')
         test_tag = self.to_categorical(np.asarray(test_tag, dtype='int32'))
         print(test_tag[0])
         print(len(test_tag))

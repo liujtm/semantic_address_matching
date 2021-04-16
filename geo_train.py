@@ -9,6 +9,7 @@ from sklearn.metrics import f1_score
 from sklearn import metrics
 import os
 import random
+import logging
 
 
 con = config.Config()
@@ -17,21 +18,27 @@ data_pre = geo_data_prepare.Data_Prepare()
 
 
 class TrainModel(object):
-    # Convert text to index
-    def pre_processing(self, input, output_texta, output_textb, output_lable, vocab):
+    # Convert text to index  把原始文件如 test.txt 转换为 3个文件： query1(把词转换为数字index)  query2   结果
+    def pre_processing(self, input_name, vocab):
+        input = input_name+".txt"
+        output_texta = input_name + "_code_a.txt"
+        output_textb = input_name + "_code_b.txt"
+        output_lable = input_name + "_lable.txt"
+        logging.info("input file %s , three output files: %s %s %s", input, output_texta, output_textb, output_lable)
+
         texta_index = []
         textb_index = []
         tag = []
         with open(input, 'r', encoding='UTF-8') as f:
             for line in f.readlines():
                 line = line.strip().split("\t")
-                print(line)
+                #print(line)
                 texta = data_pre.pre_processing(line[0])
                 texta_index.append(data_pre.sentence2Index(texta, vocab))
-                print(texta, data_pre.sentence2Index(texta, vocab))
+                #print(texta, data_pre.sentence2Index(texta, vocab))
                 textb = data_pre.pre_processing(line[1])
                 textb_index.append(data_pre.sentence2Index(textb, vocab))
-                print(textb, data_pre.sentence2Index(textb, vocab))
+                #print(textb, data_pre.sentence2Index(textb, vocab))
                 tag.append(line[2])
         # shuffle
         index = [x for x in range(len(texta_index))]
@@ -91,10 +98,13 @@ class TrainModel(object):
         embed = []
         cnt = 0
         fr = open(filename, 'r', encoding='UTF-8')
+
+        # word2vec.bin 第一行是 词数*维度 统计信息，直接跳过
         line = fr.readline().strip()
+
         # print line
-        word_dim = int(line.split(' ')[1])
-        vocab.append("unk")
+        word_dim = int(line.split(' ')[1])  # 第一行的第二个数据为vector维度  256维
+        vocab.append("unk")  # 第一行特意增加了这个词，为啥？？
         embed.append([0] * word_dim)
         for line in fr:
             row = line.strip().split(' ')
@@ -108,41 +118,50 @@ class TrainModel(object):
     def trainModel(self):
         # Load pre-trained word embeddings
         with tf.name_scope("Embedding"):
-            vocab, embed = self.load_word2vec("/model/w2v/word level/word2vec.bin")
-            print(vocab[0],vocab[1],vocab[2])
-            print(embed[0])
-            print(embed[1])
+            vocab, embed = self.load_word2vec("data/model/w2v/word_level/word2vec.bin")
+            logging.info("--%s--%s--%s--",vocab[0],vocab[1],vocab[2])
+            logging.info(embed[0])
+            logging.info(embed[1])
             vocab_size = len(vocab)
-            print(vocab_size)
+            logging.info("vocab_size")
+            logging.info(vocab_size)
             embedding_dim = len(embed[0])
-            print(embedding_dim)
+            logging.info("embedding_dim")
+            logging.info(embedding_dim)
             embedding = np.asarray(embed)
 
         # Load training/development datasets
-        train_texta_index = data_pre.readfile('/data/dataset/train_code_a.txt')
+        train_texta_index = data_pre.readfile('data/dataset/train_code_a.txt')
         train_texta_index = pad_sequences(train_texta_index, con.maxLen, padding='post')
-        print(train_texta_index[0])
-        print(len(train_texta_index))
-        train_textb_index = data_pre.readfile('/data/dataset/train_code_b.txt')
+        logging.info("train_code_a")
+        logging.info(train_texta_index[0])
+        logging.info(len(train_texta_index))
+        train_textb_index = data_pre.readfile('data/dataset/train_code_b.txt')
         train_textb_index = pad_sequences(train_textb_index, con.maxLen, padding='post')
-        print(train_textb_index[0])
-        print(len(train_textb_index))
-        train_tag = data_pre.readfile('/data/dataset/train_lable.txt')
+        logging.info("train_code_b")
+        logging.info(train_textb_index[0])
+        logging.info(len(train_textb_index))
+        train_tag = data_pre.readfile('data/dataset/train_lable.txt')
         train_tag = self.to_categorical(np.asarray(train_tag, dtype='int32'))
-        print(train_tag[0])
-        print(len(train_tag))
-        dev_texta_index = data_pre.readfile('/data/dataset/dev_code_a.txt')
+        logging.info("train_lable")
+        logging.info(train_tag[0])
+        logging.info(len(train_tag))
+
+        dev_texta_index = data_pre.readfile('data/dataset/dev_code_a.txt')
         dev_texta_index = pad_sequences(dev_texta_index, con.maxLen, padding='post')
-        print(dev_texta_index[0])
-        print(len(dev_texta_index))
-        dev_textb_index = data_pre.readfile('/data/dataset/dev_code_b.txt')
+        logging.info("dev_code_a")
+        logging.info(dev_texta_index[0])
+        logging.info(len(dev_texta_index))
+        dev_textb_index = data_pre.readfile('data/dataset/dev_code_b.txt')
         dev_textb_index = pad_sequences(dev_textb_index, con.maxLen, padding='post')
-        print(dev_textb_index[0])
-        print(len(dev_textb_index))
-        dev_tag = data_pre.readfile('/data/dataset/dev_lable.txt')
+        logging.info("dev_code_b")
+        logging.info(dev_textb_index[0])
+        logging.info(len(dev_textb_index))
+        dev_tag = data_pre.readfile('data/dataset/dev_lable.txt')
         dev_tag = self.to_categorical(np.asarray(dev_tag, dtype='int32'))
-        print(dev_tag[0])
-        print(len(dev_tag))
+        logging.info("dev_lable")
+        logging.info(dev_tag[0])
+        logging.info(len(dev_tag))
 
         # Shuffle training dataset
         index_1 = [x for x in range(len(train_texta_index))]
@@ -175,7 +194,7 @@ class TrainModel(object):
             saver = tf.train.Saver()
             best_f1 = 0.0
             for time in range(con.epoch):
-                print("training " + str(time + 1) + ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+                logging.info("training " + str(time + 1) + ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
                 model.is_trainning = True
                 loss_all = []
                 accuracy_all = []
@@ -192,7 +211,7 @@ class TrainModel(object):
                     _, cost, accuracy = sess.run([model.train_op, model.loss, model.accuracy], feed_dict)
                     loss_all.append(cost)
                     accuracy_all.append(accuracy)
-                print("Epoch:" + str((time + 1)) + "; training loss:" + str(np.mean(np.array(loss_all))) + "; accuracy: " +
+                logging.info("Epoch:" + str((time + 1)) + "; training loss:" + str(np.mean(np.array(loss_all))) + "; accuracy: " +
                       str(np.mean(np.array(accuracy_all))))
 
                 def dev_step():
@@ -215,11 +234,12 @@ class TrainModel(object):
                         accuracy_all_dev.append(dev_accuracy)
                         predictions_dev.extend(dev_prediction)
                     y_true_dev = [np.nonzero(x)[0][0] for x in dev_tag_new]
-                    print(len(y_true_dev))
+                    logging.info(len(y_true_dev))
                     y_true_dev = y_true_dev[0:len(loss_all_dev) * con.Batch_Size]
                     f1 = f1_score(np.array(y_true_dev), np.array(predictions_dev), average='weighted')
-                    print('Outputs:\n', metrics.classification_report(np.array(y_true_dev), predictions_dev))
-                    print("Dev: loss {:g}, accuracy {:g}, f1 {:g}\n".format(np.mean(np.array(loss_all_dev)),
+                    logging.info('Outputs:\n')
+                    logging.info(metrics.classification_report(np.array(y_true_dev), predictions_dev))
+                    logging.info("Dev: loss {:g}, accuracy {:g}, f1 {:g}\n".format(np.mean(np.array(loss_all_dev)),
                                                                       np.mean(np.array(accuracy_all_dev)),f1))
                     return f1
 
@@ -228,12 +248,20 @@ class TrainModel(object):
 
                 if f1 > best_f1:
                     best_f1 = f1
-                    saver.save(sess, "/model/esim/model.ckpt")
-                    print("Saved model success\n")
+                    saver.save(sess, "data/model/esim/model.ckpt")
+                    logging.info("Saved model success\n")
 
 
-train = TrainModel()
-train.trainModel()
+if __name__ == '__main__':
+    logging.basicConfig(format='%(asctime)s: %(levelname)s: %(message)s')
+    logging.root.setLevel(level=logging.INFO)
+    model = TrainModel()
+    vocab, embed = model.load_word2vec("data/model/w2v/word_level/word2vec.bin")
+    model.pre_processing("data/dataset/test", vocab)
+    model.pre_processing("data/dataset/dev", vocab)
+    model.pre_processing("data/dataset/train", vocab)
+    model.trainModel()
+
 
 # input_file = '/data/dataset/test.txt'
 # output_a = '/data/dataset/test_code_a.txt'
@@ -241,5 +269,5 @@ train.trainModel()
 # output_l = '/data/dataset/test_lable.txt'
 # vocab, embed = train.load_word2vec(
 #     "/model/w2v/word level/word2vec.bin")
-# print(vocab[0],vocab[1],vocab[2])
+# logging.info(vocab[0],vocab[1],vocab[2])
 # train.pre_processing(input_file, output_a, output_b, output_l, vocab)

@@ -9,8 +9,8 @@ def edit_distance(s1, s2):
 def Levenshtein_total():
     d_sum = 0
     count = 0
-    filename = '/data/preprocess_data/Address84474.txt'
-    output = '/data/preprocess_data/Levenshtein_total.txt'
+    filename = 'data/preprocess_data/Address84474.txt'
+    output = 'data/preprocess_data/Levenshtein_total.txt'
     with open(filename, 'r', encoding='UTF-8') as f:
         with open(output, 'w', encoding='utf-8') as o:
             for line in f.readlines():
@@ -29,8 +29,8 @@ def Levenshtein_total():
 def Levenshtein_matched():
     d_sum = 0
     count = 0
-    filename = '/data/preprocess_data/Shenzhen_address_data-20180522-matched.txt'
-    output = '/data/preprocess_data/Levenshtein_matched.txt'
+    filename = 'data/preprocess_data/Shenzhen_address_data-20180522-matched.txt'
+    output = 'data/preprocess_data/Levenshtein_matched.txt'
     with open(filename, 'r', encoding='UTF-8') as f:
         with open(output, 'w', encoding='utf-8') as o:
             for line in f.readlines():
@@ -49,8 +49,8 @@ def Levenshtein_matched():
 def Levenshtein_unmatched():
     d_sum = 0
     count = 0
-    filename = '/data/preprocess_data/Shenzhen_address_data-20180522-unmatched.txt'
-    output = '/data/preprocess_data/Levenshtein_unmatched.txt'
+    filename = 'data/preprocess_data/Shenzhen_address_data-20180522-unmatched.txt'
+    output = 'data/preprocess_data/Levenshtein_unmatched.txt'
     with open(filename, 'r', encoding='UTF-8') as f:
         with open(output, 'w', encoding='utf-8') as o:
             for line in f.readlines():
@@ -82,8 +82,8 @@ def Jaccard_similarity(s1, s2):
 def Jaccard_total():
     s_sum = 0
     count = 0
-    filename = '/data/preprocess_data/Address84474.txt'
-    output = '/data/preprocess_data/Jaccard_total.txt'
+    filename = 'data/preprocess_data/Address84474.txt'
+    output = 'data/preprocess_data/Jaccard_total.txt'
     with open(filename, 'r', encoding='UTF-8') as f:
         with open(output, 'w', encoding='utf-8') as o:
             for line in f.readlines():
@@ -102,8 +102,8 @@ def Jaccard_total():
 def Jaccard_matched():
     s_sum = 0
     count = 0
-    filename = '/data/preprocess_data/Shenzhen_address_data-20180522-matched.txt'
-    output = '/data/preprocess_data/Jaccard_matched.txt'
+    filename = 'data/preprocess_data/Shenzhen_address_data-20180522-matched.txt'
+    output = 'data/preprocess_data/Jaccard_matched.txt'
     with open(filename, 'r', encoding='UTF-8') as f:
         with open(output, 'w', encoding='utf-8') as o:
             for line in f.readlines():
@@ -122,8 +122,8 @@ def Jaccard_matched():
 def Jaccard_unmatched():
     s_sum = 0
     count = 0
-    filename = '/data/preprocess_data/Shenzhen_address_data-20180522-unmatched.txt'
-    output = '/data/preprocess_data/Jaccard_unmatched.txt'
+    filename = 'data/preprocess_data/Shenzhen_address_data-20180522-unmatched.txt'
+    output = 'data/preprocess_data/Jaccard_unmatched.txt'
     with open(filename, 'r', encoding='UTF-8') as f:
         with open(output, 'w', encoding='utf-8') as o:
             for line in f.readlines():
@@ -143,8 +143,8 @@ def Jaccard_unmatched():
 def diff_total():
     d_sum = 0
     count = 0
-    filename = '/data/preprocess_data/Address84474.txt'
-    output = '/data/preprocess_data/diff_total.txt'
+    filename = 'data/preprocess_data/Address84474.txt'
+    output = 'data/preprocess_data/diff_total.txt'
     with open(filename, 'r', encoding='UTF-8') as f:
         with open(output, 'w', encoding='utf-8') as o:
             for line in f.readlines():
@@ -163,8 +163,8 @@ def diff_total():
 def diff_matched():
     d_sum = 0
     count = 0
-    filename = '/data/preprocess_data/Shenzhen_address_data-20180522-matched.txt'
-    output = '/data/preprocess_data/diff_matched.txt'
+    filename = 'data/preprocess_data/Shenzhen_address_data-20180522-matched.txt'
+    output = 'data/preprocess_data/diff_matched.txt'
     with open(filename, 'r', encoding='UTF-8') as f:
         with open(output, 'w', encoding='utf-8') as o:
             for line in f.readlines():
@@ -183,8 +183,8 @@ def diff_matched():
 def diff_unmatched():
     d_sum = 0
     count = 0
-    filename = '/data/preprocess_data/Shenzhen_address_data-20180522-unmatched.txt'
-    output = '/data/preprocess_data/diff_unmatched.txt'
+    filename = 'data/preprocess_data/Shenzhen_address_data-20180522-unmatched.txt'
+    output = 'data/preprocess_data/diff_unmatched.txt'
     with open(filename, 'r', encoding='UTF-8') as f:
         with open(output, 'w', encoding='utf-8') as o:
             for line in f.readlines():
@@ -201,4 +201,5 @@ def diff_unmatched():
             print('length difference', d_unmatched_mean)
 
 
-diff_unmatched()
+if __name__ == '__main__':
+    diff_unmatched()
