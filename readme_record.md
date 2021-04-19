@@ -5,5 +5,5 @@
    - 把原始文件如 test.txt 转换为 3个文件： query1(把词转换为数字index)  query2 结果
    - 首先加载上述词向量word2vec.bin;
    - 再加载训练集和dev开发集各三个文件(label code_a code_b)
-   - 训练，输出模型文件 data/model/esim/model.ckpt
-
+   - 训练，输出模型文件 data/model/esim/model.ckpt , 训练20轮 epoch 再MBP上耗时接近2小时；
+4. 测试  geo_test.py

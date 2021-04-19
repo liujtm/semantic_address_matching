@@ -2,20 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1641f477-d44d-42fc-8eef-23cb134d4f57" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/readme_record.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/Deep learning for geocoding.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Deep learning for geocoding.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/geo_data_prepare.py" beforeDir="false" afterPath="$PROJECT_DIR$/geo_data_prepare.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/geo_data_processor.py" beforeDir="false" afterPath="$PROJECT_DIR$/geo_data_processor.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/geo_similarity.py" beforeDir="false" afterPath="$PROJECT_DIR$/geo_similarity.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/geo_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/geo_test.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/geo_token.py" beforeDir="false" afterPath="$PROJECT_DIR$/geo_token.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/geo_train.py" beforeDir="false" afterPath="$PROJECT_DIR$/geo_train.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/geo_word2vec.py" beforeDir="false" afterPath="$PROJECT_DIR$/geo_word2vec.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/other_crf_w2v.py" beforeDir="false" afterPath="$PROJECT_DIR$/other_crf_w2v.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/readme_record.md" beforeDir="false" afterPath="$PROJECT_DIR$/readme_record.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
