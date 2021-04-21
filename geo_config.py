@@ -11,3 +11,4 @@ class Config(object):
 
         self.epoch = 20  # epoch
         self.Batch_Size = 75  # mini-batch size
+        # self.Batch_Size = 3  # mini-batch size

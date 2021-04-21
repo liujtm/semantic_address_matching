@@ -9,12 +9,15 @@ import random
 from sklearn.metrics import f1_score
 from tqdm import tqdm
 from sklearn import metrics
+from geo_train import TrainModel
 
 data_pre = geo_data_prepare.Data_Prepare()
 con = config.Config()
 
-class Infer(object):
+class Predict(object):
     def __init__(self):
+        self.vocab, self.embed = TrainModel().load_word2vec("data/model/w2v/word_level/word2vec.bin")
+
         # self.checkpoint_file = tf.train.latest_checkpoint('D:/Lydia/PycharmProjects/Deep learning for geocoding/model/esim')
         self.checkpoint_file = tf.train.latest_checkpoint('data/model/esim')
         graph = tf.Graph()
@@ -68,52 +71,45 @@ class Infer(object):
             t = tag[i * con.Batch_Size:(i + 1) * con.Batch_Size]
             yield a, b, t
 
-    def infer(self):
-        # transfer to vector
-        test_texta_index = data_pre.readfile('data/dataset/test_code_a.txt')
-        test_texta_index = pad_sequences(test_texta_index, con.maxLen, padding='post')
-        print(test_texta_index[0])
-        print(len(test_texta_index))
-        test_textb_index = data_pre.readfile('data/dataset/test_code_b.txt')
-        test_textb_index = pad_sequences(test_textb_index, con.maxLen, padding='post')
-        print(test_textb_index[0])
-        print(len(test_textb_index))
-        test_tag = data_pre.readfile('data/dataset/test_lable.txt')
-        test_tag = self.to_categorical(np.asarray(test_tag, dtype='int32'))
-        print(test_tag[0])
-        print(len(test_tag))
+    def convert_sentence(self, sentence='宝安区福永街道107国道边机场综合楼1006'):
+        tokens = data_pre.pre_processing(sentence)  # 分词
+        token_indexes = data_pre.sentence2Index(tokens, self.vocab) # 词汇的index
+        # batch = [token_indexes]  # 批量预测多组数据
+        batch = [token_indexes, token_indexes, token_indexes]  # 批量预测多组数据
+        after_pad = pad_sequences(batch, con.maxLen, padding='post')
+        logging.info("convert_sentence: %s \n%s \n%s \n%s\n", sentence, str(tokens), str(token_indexes), str(after_pad))
+        return np.array(after_pad)
 
-        # shuffle dev
-        index = [x for x in range(len(test_texta_index))]
-        random.shuffle(index)
-        test_texta_new = [test_texta_index[x] for x in index]
-        test_textb_new = [test_textb_index[x] for x in index]
-        test_tag_new = [test_tag[x] for x in index]
+
+    def predict(self, query_a='宝安区福永街道107国道边机场综合楼188006', query_b='盐田区渔民新村51号13212'):
+        convert_a = self.convert_sentence(query_a)
+        convert_b = self.convert_sentence(query_b)
+        a_length = self.get_length(convert_a)
+        b_length = self.get_length(convert_b)
+        logging.info("len a: %s , len b: %s", a_length, b_length)
+
+        feed_dict = {
+            self.text_a: convert_a,
+            self.text_b: convert_b,
+            self.drop_keep_prob: 1.0,
+            self.a_length: np.array(a_length),
+            self.b_length: np.array(b_length)
+        }
 
         y_pred = []
-        y_true = []
-        for texta, textb, tag in tqdm(
-                self.get_batches(test_texta_new, test_textb_new, test_tag_new)):
-            feed_dict = {
-                self.text_a: texta,
-                self.text_b: textb,
-                self.drop_keep_prob: 1.0,
-                self.a_length: np.array(self.get_length(texta)),
-                self.b_length: np.array(self.get_length(textb))
-            }
-            y, s = self.sess.run([self.prediction, self.score], feed_dict)
-            y_pred.extend(y)
-            y_tag = [np.nonzero(x)[0][0] for x in tag]
-            y_true.extend(y_tag)
-            logging.info("texta: %s\n y_pred: %s\n y_true: %s\n s:%s\n", str(texta), str(y_pred), str(y_true), str(s))
-            break
 
-        f1 = f1_score(np.array(y_true), np.array(y_pred), average='weighted')
-        print('Outputs:\n', metrics.classification_report(np.array(y_true), y_pred))
+        y, s = self.sess.run([self.prediction, self.score], feed_dict) # score 为 [x,1-x], 如果x<0.5,预测y=0；否则y=1； x代表可信度
+        y_pred.extend(y)
+
+        logging.info("convert_a: %s\n y: %s, s: %s, y_pred: %s", str(convert_a),str(y), str(s), str(y_pred))
 
 
 if __name__ == '__main__':
     logging.basicConfig(format='%(asctime)s: %(levelname)s: %(message)s')
     logging.root.setLevel(level=logging.INFO)
-    infer = Infer()
-    infer.infer()
+    predict = Predict()
+    predict.predict()
+    while True:
+        query_a = input("Enter address 1: ")
+        query_b = input("Enter address 2: ")
+        predict.predict(query_a, query_b)

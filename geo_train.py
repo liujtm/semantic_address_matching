@@ -33,8 +33,8 @@ class TrainModel(object):
             for line in f.readlines():
                 line = line.strip().split("\t")
                 #print(line)
-                texta = data_pre.pre_processing(line[0])
-                texta_index.append(data_pre.sentence2Index(texta, vocab))
+                texta = data_pre.pre_processing(line[0])  # texta 为分词后的  词汇列表
+                texta_index.append(data_pre.sentence2Index(texta, vocab))  # sentence2Index返回上述 词汇列表 转换成 word2vec词汇表的 index数字，为0代表不在词汇表中
                 #print(texta, data_pre.sentence2Index(texta, vocab))
                 textb = data_pre.pre_processing(line[1])
                 textb_index.append(data_pre.sentence2Index(textb, vocab))
